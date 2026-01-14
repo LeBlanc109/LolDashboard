@@ -1,23 +1,20 @@
 #Set working directory for power bi
+##This was very difficult
+import sys
 import os
+sys.path.insert(0, r'C:\Users\clone\Documents\LolDashboard')
 os.chdir(r'C:\Users\clone\Documents\LolDashboard')
 
-#we need the developer api key
+#Power BI is very VERY particular about this
 from riot_auth import developer_api_key
-
-#do we need pandas in EVERY file?
 import pandas as pd
-
 #ALSO riot has api limits, 
 import time
-
-#call method from: lg_stats.py
 from lg_stats import first_function
-df1 = first_function(developer_api_key)
+from rank import second_function
 
+df1 = first_function(developer_api_key)
 #sleep for 1 second...
 time.sleep(1)
-
 #call method from: rank.py
-from rank import second_function
 df2 = second_function(developer_api_key)
