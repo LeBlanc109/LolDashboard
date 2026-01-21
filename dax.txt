@@ -1,0 +1,54 @@
+#AREA CHART
+Gold Advantage = 
+VAR Team100Gold = 
+    CALCULATE(
+        SUM('YourTable'[totalGold]),
+        'YourTable'[team] = 100
+    )
+VAR Team200Gold = 
+    CALCULATE(
+        SUM('YourTable'[totalGold]),
+        'YourTable'[team] = 200
+    )
+RETURN Team100Gold - Team200Gold
+
+
+#CARD
+CS Min - PlayerName = 
+CALCULATE(
+    DIVIDE(
+        SUM('YourTable'[creep_score]),
+        SUM('YourTable'[frame])
+    ),
+    'YourTable'[player_gamertag] = "YourName#Tag"
+)
+
+#CARD
+Average CS Min - Rank = 
+DIVIDE(
+    SUM('ranked_df'[creep_score]),
+    SUM('ranked_df'[frame])
+)
+
+
+
+#PIE CHART part 1.
+Gold Share = 
+VAR PlayerTeam = SELECTEDVALUE('YourTable'[team])
+VAR PlayerGold = SUM('YourTable'[totalGold])
+VAR TeamTotalGold = 
+    CALCULATE(
+        SUM('YourTable'[totalGold]),
+        ALLEXCEPT('YourTable', 'YourTable'[team], 'YourTable'[frame])
+    )
+RETURN
+DIVIDE(PlayerGold, TeamTotalGold)
+
+#PIE CHART part 2.
+My Gold Share = 
+CALCULATE(
+    [Gold Share],
+    'YourTable'[PBISource] = "Last Game",
+    'YourTable'[position] = "bot"
+)
+

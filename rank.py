@@ -51,5 +51,8 @@ def second_function(api_key):
     all_rows = []
     for timeline in all_timelines_json:
         all_rows.extend(fill_rank_tl(timeline))
+    
+    ranked_df = pd.DataFrame(all_rows)
+    ranked_df['PBISource'] = 'Silver Average'
 
-    return pd.DataFrame(all_rows)
+    return ranked_df

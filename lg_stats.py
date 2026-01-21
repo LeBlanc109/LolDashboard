@@ -7,18 +7,26 @@ def first_function(api_key):
     #RIOT API KEY: 
     auth = api_key
 
-    #Step 1 -> READ the JSON
+    #Step 1 -> READ the JSON (we could call it similarily to the rank one, but to save on api calls for now)
     with open("match_timeline.json", "r") as file:
         data = json.load(file)
 
-        #A. The PUUIDs are at the top of the match.json, use to get gameName + tagLine
-    player_gamertags = {}
+    lane_template = {
+        1: "top", 2: "jungle", 3: "mid", 4: "bot", 5: "supp",
+        6: "top", 7: "jungle", 8: "mid", 9: "bot", 10: "supp"
+    }
+    
+    team_template = {
+        1: 100, 2: 100, 3: 100, 4: 100, 5: 100,  # Blue buff/team
+        6: 200, 7: 200, 8: 200, 9: 200, 10: 200   # Red buff/ team
+    }
 
-    for item in data["info"]["participants"]:
-        participant_id = item["participantId"]
-        puuid = item["puuid"]
+    #A. Puuid -> gameName + tagLines
+    player_gamertags = {}
+    
+    for participant_id, player_unique in enumerate(data["metadata"]["participants"], start=1):
         response = requests.get(
-            f'https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}?api_key={auth}'
+            f'https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/{player_unique}?api_key={auth}'
         )
 
         player_data = response.json()
@@ -27,20 +35,33 @@ def first_function(api_key):
     rows_data = []
     for frame_idx, frame in enumerate(data["info"]["frames"]):
         for participant_id, participant_stats in frame["participantFrames"].items():
+            statz = participant_stats
 
             #Arguably most importanyl we need the FRAME
-            participant_stats['frame'] = frame_idx
+            statz['frame'] = frame_idx
 
-            #Step 2 -> CLEAN the DATA
-            participant_stats.update(participant_stats.pop('championStats'))
-            participant_stats.update(participant_stats.pop('damageStats'))
-            participant_stats.update(participant_stats.pop('position'))
+            #Step 2 -> CLEAN the DATA, 
+            #first POP
+            statz.update(statz.pop('championStats'))
+            statz.update(statz.pop('damageStats'))
+            statz.update(statz.pop('position'))
 
-            #Step 3 -> TRANSFORM the DATA
-            participant_stats['creep_score'] = participant_stats.get('minionsKilled') + participant_stats.get('jungleMinionsKilled')
+            #clean the values we want right now to numbers... (theyre strings in pbi)
+            statz['totalGold'] = int(statz.get('totalGold' , 0))
+            statz["level"] = int(statz.get('level' , 0))
 
-            participant_stats['player_gamertag'] = player_gamertags[int(participant_id)]
-            rows_data.append(participant_stats)
+            #something
+            statz['player_gamertag'] = player_gamertags[int(participant_id)]
+            statz['position'] = lane_template[int(participant_id)]
+            statz['team'] = team_template[int(participant_id)]
 
-    df = pd.DataFrame(rows_data)
-    return df
+            #Step 3 -> this one requires transforming AND cleaning in 1
+            statz['creep_score'] = int(statz.get('minionsKilled' , 0) + statz.get('jungleMinionsKilled' , 0))
+            
+            rows_data.append(statz)
+
+    lastgame_df = pd.DataFrame(rows_data)
+    lastgame_df['PBISource'] = 'Last Game'
+
+
+    return lastgame_df
