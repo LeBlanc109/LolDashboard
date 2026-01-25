@@ -12,9 +12,12 @@ import pandas as pd
 import time
 from lg_stats import first_function
 from rank import second_function
+from lg_events import third_function
 
 df1 = first_function(developer_api_key)
 #sleep for 1 second...
 time.sleep(1)
 #call method from: rank.py
 df2 = second_function(developer_api_key)
+
+df3 = third_function()
