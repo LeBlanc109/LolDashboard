@@ -18,6 +18,6 @@ df1 = first_function(developer_api_key)
 #sleep for 1 second...
 time.sleep(1)
 #call method from: rank.py
-df2 = second_function(developer_api_key)
+rank_df2 = second_function(developer_api_key)
 
-df3 = third_function()
+events_df3 = third_function()

@@ -35,6 +35,7 @@ def fill_rank_tl(timeline_data):
 
 def second_function(api_key):
     auth = api_key
+
     ladder_I_json = get_ladder_rung('I', auth)
     ladder_II_json = get_ladder_rung('II', auth)
     ladder_III_json = get_ladder_rung('III', auth)
@@ -53,6 +54,12 @@ def second_function(api_key):
         all_rows.extend(fill_rank_tl(timeline))
     
     ranked_df = pd.DataFrame(all_rows)
+
+    lane_template = {
+        1: "top", 2: "jungle", 3: "mid", 4: "bot", 5: "supp",
+        6: "top", 7: "jungle", 8: "mid", 9: "bot", 10: "supp"
+    }
+    ranked_df['position'] = ranked_df['participantId'].map(lane_template)
     ranked_df['PBISource'] = 'Silver Average'
 
     return ranked_df

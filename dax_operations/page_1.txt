@@ -1,0 +1,60 @@
+PlayerKills = 
+VAR SelectedPlayer = SELECTEDVALUE(PlayerSelector[player_gamertag])
+VAR PlayerID = 
+    CALCULATE(
+        MAX(df1[participantId]),
+        df1[player_gamertag] = SelectedPlayer
+    )
+RETURN
+    CALCULATE(
+        COUNTROWS(df3),
+        df3[type] = "CHAMPION_KILL",
+        df3[killerId] = PlayerID
+    )
+
+Deaths_Select = 
+VAR SelectedPlayer = SELECTEDVALUE(PlayerSelector[player_gamertag])
+VAR PlayerID = 
+    CALCULATE(
+        MAX(df1[participantId]),
+        df1[player_gamertag] = SelectedPlayer
+    )
+RETURN
+    CALCULATE(
+        COUNTROWS(df3),
+        df3[type] = "CHAMPION_KILL",
+        df3[victimId] = PlayerID
+    )
+
+PlayerCS = 
+VAR SelectedPlayer = SELECTEDVALUE(PlayerSelector[player_gamertag])
+VAR MaxFrame = MAX(df1[frame])
+RETURN
+    CALCULATE(
+        MAX(df1[creep_score]),
+        df1[player_gamertag] = SelectedPlayer,
+        df1[frame] = MaxFrame
+    )
+
+PlayerResult = 
+VAR SelectedPlayer = SELECTEDVALUE(PlayerSelector[player_gamertag])
+VAR PlayerTeam = 
+    CALCULATE(
+        MAX('df1'[team]),
+        'df1'[player_gamertag] = SelectedPlayer
+    )
+VAR WinningTeam = 
+    CALCULATE(
+        MAX('df3'[winningTeam]),
+        'df3'[type] = "GAME_END"
+    )
+RETURN
+    IF(PlayerTeam = WinningTeam, "WIN", "LOSS")
+
+CUSTOM ONE: Gold Advantage...
+
+CUSTOM ONE: MAP PLOT 
+
+CUSTOM ONE: sum of total goldby person and name, player gold by frame
+
+CUSTOM ONE: Creepscore by position, split by team
