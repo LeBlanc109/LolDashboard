@@ -21,8 +21,11 @@ The goal of this project is to lay a strong foundation from which we can create 
 ---
 
 ## 🖼️ Dashboard Preview
+![Proof_of_concept](https://github.com/LeBlanc109/LolDashboard/blob/00cb67299c62a70d1053717955da533567a84eca/images/page_1_proof.png)
+![Dashboard](https://github.com/LeBlanc109/LolDashboard/blob/00cb67299c62a70d1053717955da533567a84eca/images/page_1_rough.png)
+![Cont_proofs](https://github.com/LeBlanc109/LolDashboard/blob/00cb67299c62a70d1053717955da533567a84eca/images/page_2_proof.png)
 
-> *Screenshots coming soon*
+> *Actual UX designed dash + additional pages as mentioned below coming soon*
 
 ##
 ### Pages I'd LIKE TO Include:
