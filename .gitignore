@@ -1,1 +1,4 @@
 riot_auth.py
+.venv/
+__pycache__/
+.env
